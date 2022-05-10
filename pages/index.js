@@ -18,23 +18,59 @@ import { Fragment } from 'react'
 import { Popover, Transition } from '@headlessui/react'
 import { MenuIcon, XIcon } from '@heroicons/react/outline'
 
-const navigation = [
-  { name: 'Product', href: '#' },
-  { name: 'Features', href: '#' },
-  { name: 'Marketplace', href: '#' },
-  { name: 'Company', href: '#' },
+const files = [
+  {
+    title: 'Call to Duty: End of Service',
+    size: '3.9 MB',
+    source:
+      'https://images.unsplash.com/photo-1582053433976-25c00369fc93?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=512&q=80',
+  },
+  {
+    title: 'Switching out of the military and into a skilled trade',
+    size: '3.9 MB',
+    source:
+      'https://images.unsplash.com/photo-1582053433976-25c00369fc93?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=512&q=80',
+  },
+  {
+    title: 'IMG_4985.HEIC',
+    size: '3.9 MB',
+    source:
+      'https://images.unsplash.com/photo-1582053433976-25c00369fc93?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=512&q=80',
+  },
+  {
+    title: 'IMG_4985.HEIC',
+    size: '3.9 MB',
+    source:
+      'https://images.unsplash.com/photo-1582053433976-25c00369fc93?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=512&q=80',
+  },
+  {
+    title: 'IMG_4985.HEIC',
+    size: '3.9 MB',
+    source:
+      'https://images.unsplash.com/photo-1582053433976-25c00369fc93?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=512&q=80',
+  },
+  {
+    title: 'IMG_4985.HEIC',
+    size: '3.9 MB',
+    source:
+      'https://images.unsplash.com/photo-1582053433976-25c00369fc93?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=512&q=80',
+  },
+  // More files...
 ]
 
 export default function Example() {
   return (
+    // Container
     <div className="bg-white overflow-hidden">
-      <div className="hidden lg:block lg:absolute lg:inset-0" aria-hidden="true">
+
+      {/* Fancy dots */}
+      <div className="hidden lg:block lg:absolute lg:inset-0 overflow-hidden" aria-hidden="true" >
         <svg
           className="absolute top-0 left-1/2 transform translate-x-64 -translate-y-8"
           width={640}
-          height={784}
+          height={640}
           fill="none"
-          viewBox="0 0 640 784"
+          viewBox="0 0 640 640"
         >
           <defs>
             <pattern
@@ -49,9 +85,11 @@ export default function Example() {
             </pattern>
           </defs>
           <rect y={72} width={640} height={640} className="text-gray-50" fill="currentColor" />
-          <rect x={118} width={404} height={784} fill="url(#9ebea6f4-a1f5-4d96-8c4e-4c2abf658047)" />
+          <rect x={118} width={404} height={640} fill="url(#9ebea6f4-a1f5-4d96-8c4e-4c2abf658047)" />
         </svg>
       </div>
+
+      {/* Hero */}
       <div className="relative pt-6 pb-16 sm:pb-24 lg:pb-32">
         <main className="mt-16 mx-auto max-w-7xl px-4 sm:mt-24 sm:px-6 lg:mt-32">
           <div className="lg:grid lg:grid-cols-12 lg:gap-8">
@@ -71,33 +109,10 @@ export default function Example() {
               </p>
             </div>
             <div className="mt-12 relative sm:max-w-lg sm:mx-auto lg:mt-0 lg:max-w-none lg:mx-0 lg:col-span-6 lg:flex lg:items-center">
-              <svg
-                className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-8 scale-75 origin-top sm:scale-100 lg:hidden"
-                width={640}
-                height={784}
-                fill="none"
-                viewBox="0 0 640 784"
-                aria-hidden="true"
-              >
-                <defs>
-                  <pattern
-                    id="4f4f415c-a0e9-44c2-9601-6ded5a34a13e"
-                    x={118}
-                    y={0}
-                    width={20}
-                    height={20}
-                    patternUnits="userSpaceOnUse"
-                  >
-                    <rect x={0} y={0} width={4} height={4} className="text-gray-200" fill="currentColor" />
-                  </pattern>
-                </defs>
-                <rect y={72} width={640} height={640} className="text-gray-50" fill="currentColor" />
-                <rect x={118} width={404} height={784} fill="url(#4f4f415c-a0e9-44c2-9601-6ded5a34a13e)" />
-              </svg>
               <div className="relative mx-auto w-full rounded-lg shadow-lg lg:max-w-md">
                 <button
                   type="button"
-                  className="relative block w-full bg-white rounded-lg overflow-hidden focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                  className="relative block w-full bg-white rounded-lg overflow-hidden focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500"
                 >
                   <span className="sr-only">Watch our video to learn more</span>
                   <img
@@ -117,6 +132,32 @@ export default function Example() {
           </div>
         </main>
       </div>
+
+      {/* Step 1: Choose your video */}
+      <div className="mx-auto max-w-7xl pt-6 pb-16 sm:pb-24 lg:pb-32">
+        <span className="block text-2xl font-bold text-gray-700">
+          Step 1: Choose your video
+        </span>
+        <ul role="list" className="mx-auto mt-8 grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2 sm:gap-x-6 lg:grid-cols-4 xl:gap-x-8">
+        {files.map((file) => (
+          <li key={file.source} className="relative">
+            <div className="m-0 p-0 rounded-lg focus-within:ring-2 ring-offset-4 ring-orange-500">
+              <div className="relative aspect-video group block rounded-lg overflow-hidden">
+                <img src={file.source} alt="" className="object-cover pointer-events-none group-hover:opacity-75" />
+                <button type="button" className="absolute inset-0 focus:outline">
+                  <span className="sr-only">View details for {file.title}</span>
+                </button>
+              </div>
+              <p className="mt-2 block text-sm font-medium text-gray-900 truncate pointer-events-none">{file.title}</p>
+              <p className="block text-sm font-medium text-gray-500 pointer-events-none">{file.size}</p>
+            </div>
+             
+            
+          </li>
+        ))}
+      </ul>
+      </div>
     </div>
   )
 }
+
