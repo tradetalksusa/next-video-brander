@@ -14,9 +14,9 @@
   }
   ```
 */
-import { Fragment } from 'react'
-import { Popover, Transition } from '@headlessui/react'
-import { MenuIcon, XIcon } from '@heroicons/react/outline'
+
+import { useState } from 'react';
+import { FilmIcon as GenerateVideoIcon, EmojiHappyIcon as EditingVideoIcon, DownloadIcon as VideoDownloadIcon } from '@heroicons/react/solid'
 
 const files = [
   {
@@ -58,7 +58,25 @@ const files = [
   // More files...
 ]
 
+const VideoStatus = {
+  STANDBY: "standby",
+  LOADING: "loading video",
+  COMPLETE: "complete",
+  ERROR: "error",
+}
+
 export default function Example() {
+
+  const [isUploadingImage, setIsUploadingImage] = useState(false)
+  const [videoStatus, setVideoStatus] = useState(VideoStatus.STANDBY)
+
+  const handleGenerateVideo = () => { 
+    setVideoStatus(VideoStatus.LOADING)
+    setTimeout(() => {
+      setVideoStatus(VideoStatus.COMPLETE)
+     }, 2000)
+  }
+
   return (
     // Container
     <div className="bg-white overflow-hidden">
@@ -180,7 +198,7 @@ export default function Example() {
             <div className="flex justify-center text-center text-sm text-gray-600">
               <label
                 htmlFor="file-upload"
-                className="relative cursor-pointer bg-white rounded-md font-medium text-orange-600 hover:text-orange-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500"
+                className="relative cursor-pointer bg-white rounded-md font-medium text-orange-600 hover:text-orange-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-orange-500"
               >
                 <span>Upload a file</span>
                 <input id="file-upload" name="file-upload" type="file" className="sr-only" />
@@ -193,6 +211,43 @@ export default function Example() {
         </div>
       </div>
 
+      {/* Step 3: Generate your video */}
+      <div className="mx-auto max-w-7xl pt-6 pb-16 sm:pb-24 lg:pb-32">
+        <span className="block mb-8 text-2xl font-bold text-gray-700">
+          Step 3: Create your video
+        </span>
+        {videoStatus === VideoStatus.STANDBY && (
+          <button
+            type="button"
+            className="inline-flex items-center px-6 py-3 border border-transparent shadow-sm text-base font-medium rounded-md text-white bg-orange-600 hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500"
+            onClick={() => { handleGenerateVideo() }}
+          >
+            <GenerateVideoIcon className="-ml-1 mr-3 h-5 w-5" aria-hidden="true" />
+            Generate video
+          </button>)
+        }
+        {videoStatus === VideoStatus.LOADING &&
+          (<button
+            type="button"
+            className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-orange-700 bg-orange-100 hover:bg-orange-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500"
+          >
+            <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-orange" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            Editing video...
+          </button>)
+        }
+        {videoStatus === VideoStatus.COMPLETE && (
+          <button
+            type="button"
+            className="inline-flex items-center px-6 py-3 border border-transparent shadow-sm text-base font-medium rounded-md text-white bg-orange-600 hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500"
+          >
+            <VideoDownloadIcon className="-ml-1 mr-3 h-5 w-5" aria-hidden="true" />
+            Download video
+          </button>)
+        }
+      </div>
 
     </div>
   )
