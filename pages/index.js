@@ -139,14 +139,14 @@ export default function Example() {
         <ul role="list" className="mx-auto grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2 sm:gap-x-6 lg:grid-cols-4 xl:gap-x-8">
           {videos.map((video) => (
             <li key={video.youtubeUrl} className="relative">
-              <div className="m-0 p-0 rounded-lg focus-within:ring-2 ring-offset-4 ring-orange-500">
-                <div className="relative aspect-video group block rounded-lg overflow-hidden">
-                  <iframe width="296" height="168" src={`https://www.youtube.com/embed/${video.ID}`} title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen controls={0}></iframe>
+              <div className="m-2 p-2 rounded-lg focus-within:ring-2 ring-offset-4 ring-orange-500">
+                <div className="relative pb-[56.25%] pt-px-30 h-0  group rounded-lg overflow-hidden">
+                  <iframe className="absolute top-0 left-0 w-full h-full" src={`https://www.youtube.com/embed/${video.ID}`} title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen controls={0}></iframe>
                   <button type="button" className="absolute inset-0 focus:outline">
                     <span className="sr-only">View details for {video.name}</span>
                   </button>
                 </div>
-                <p className="mt-2 block text-sm font-medium text-gray-900 truncate pointer-events-none">{video.name}</p>
+                <p className="mt-2 block max-w-full break-all text-sm font-medium text-gray-900 pointer-events-none">{video.name}</p>
                 <p className="block text-sm font-medium text-gray-500 pointer-events-none">{video.ID}</p>
               </div>
             </li>
