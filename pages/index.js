@@ -18,45 +18,25 @@
 import { useState } from 'react';
 import { FilmIcon as GenerateVideoIcon, EmojiHappyIcon as EditingVideoIcon, DownloadIcon as VideoDownloadIcon } from '@heroicons/react/solid'
 
-const files = [
-  {
-    title: 'Call to Duty: End of Service',
-    size: '3.9 MB',
-    source:
-      'https://images.unsplash.com/photo-1582053433976-25c00369fc93?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=512&q=80',
-  },
-  {
-    title: 'Switching out of the military and into a skilled trade',
-    size: '3.9 MB',
-    source:
-      'https://images.unsplash.com/photo-1582053433976-25c00369fc93?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=512&q=80',
-  },
-  {
-    title: 'IMG_4985.HEIC',
-    size: '3.9 MB',
-    source:
-      'https://images.unsplash.com/photo-1582053433976-25c00369fc93?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=512&q=80',
-  },
-  {
-    title: 'IMG_4985.HEIC',
-    size: '3.9 MB',
-    source:
-      'https://images.unsplash.com/photo-1582053433976-25c00369fc93?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=512&q=80',
-  },
-  {
-    title: 'IMG_4985.HEIC',
-    size: '3.9 MB',
-    source:
-      'https://images.unsplash.com/photo-1582053433976-25c00369fc93?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=512&q=80',
-  },
-  {
-    title: 'IMG_4985.HEIC',
-    size: '3.9 MB',
-    source:
-      'https://images.unsplash.com/photo-1582053433976-25c00369fc93?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=512&q=80',
-  },
-  // More files...
+const videos = [
+  { "name": "Call of Duty: End of Service", "youtubeUrl": "https://www.youtube.com/watch?v=xLlc0QrLgJ4", "ID": "xLlc0QrLgJ4" }, 
+  { "name": "Transitioning out of the Military into the Skilled Trades", "youtubeUrl": "https://www.youtube.com/watch?v=_2MDazO7jt4", "ID": "_2MDazO7jt4" }, 
+  { "name": "Carpentry", "youtubeUrl": "https://www.youtube.com/watch?v=mvpHFSPCh7I", "ID": "mvpHFSPCh7I" }, 
+  { "name": "Welder - The 'Torch' bearer of the skilled trades", "youtubeUrl": "https://www.youtube.com/watch?v=evafrp_QEkY", "ID": "evafrp_QEkY" }, 
+  { "name": "Electricians and Project Managers (Veteran)", "youtubeUrl": "https://www.youtube.com/watch?v=iTrvRBmP1GY", "ID": "iTrvRBmP1GY" }, 
+  { "name": "Roofing Ninja - View from the top", "youtubeUrl": "https://www.youtube.com/watch?v=qszF7cYJbCA", "ID": "qszF7cYJbCA" }, 
+  { "name": "Construction Technologist", "youtubeUrl": "https://www.youtube.com/watch?v=xwuW0IB20JU", "ID": "xwuW0IB20JU" }, 
+  { "name": "Plumbing - Make money and have lots of job security", "youtubeUrl": "https://www.youtube.com/watch?v=zAeF2GNEpSI", "ID": "zAeF2GNEpSI" }, 
+  { "name": "Demolition (Tear things down to make them beautiful again)", "youtubeUrl": "https://www.youtube.com/watch?v=TsFu_FEGVi0", "ID": "TsFu_FEGVi0" }, 
+  { "name": "Carpentry (Veteran)", "youtubeUrl": "https://www.youtube.com/watch?v=pfGAOJdO3UA", "ID": "pfGAOJdO3UA" }, 
+  { "name": "HVAC and the Mechanical Trades", "youtubeUrl": "https://www.youtube.com/watch?v=78CtMRsFhQY", "ID": "78CtMRsFhQY" }, 
+  { "name": "The 'Real' Game of Life by TradeTalksUSA.org", "youtubeUrl": "https://www.youtube.com/watch?v=_sFi9xcyslA", "ID": "_sFi9xcyslA" }, 
+  { "name": "Jenn the Builder - Entrepreneur", "youtubeUrl": "https://www.youtube.com/watch?v=vxC2K2sTSLg", "ID": "vxC2K2sTSLg" }, 
+  { "name": "Existential Crisis - 4-Year & Technical College", "youtubeUrl": "https://www.youtube.com/watch?v=ojx0Ilr-5pY", "ID": "ojx0Ilr-5pY" }, 
+  { "name": "Electric Clyde (Being an Electrician is a power move)", "youtubeUrl": "https://www.youtube.com/watch?v=s9JKWnCuWv4", "ID": "s9JKWnCuWv4" }, 
+  { "name": "All We Do Is Build (P-Trap & Tech College feat. Lou da Plumber, General Contracta, & Drone Dougg)", "youtubeUrl": "https://www.youtube.com/watch?v=L_zEhqZJPwA", "ID": "L_zEhqZJPwA" },
 ]
+
 
 const VideoStatus = {
   STANDBY: "standby",
@@ -118,12 +98,12 @@ export default function Example() {
                 </span>
                 <span className="mt-1 block text-4xl tracking-tight font-extrabold sm:text-5xl xl:text-6xl">
                   <span className="block text-gray-900">Spread awareness</span>
-                  <span className="block text-gray-900">of skilled trades</span>
-                  <span className="block text-orange-600">using our content</span>
+                  <span className="block text-gray-900">with your brand</span>
+                  <span className="block text-orange-600">and our videos</span>
                 </span>
               </h1>
               <p className="mt-3 text-base text-gray-500 sm:mt-5 sm:text-xl lg:text-lg xl:text-xl">
-                TradeTalks creates videos to educate viewers on Skilled Trades and training opportunities, and now you can add your brand to those TradeTalks videos. 
+                TradeTalks creates videos to spread awareness of skilled trades and training opportunities, and now you can combine your brand with our content to spread more awareness. 
               </p>
             </div>
             <div className="mt-12 relative sm:max-w-lg sm:mx-auto lg:mt-0 lg:max-w-none lg:mx-0 lg:col-span-6 lg:flex lg:items-center">
@@ -157,17 +137,17 @@ export default function Example() {
           Step 1: Choose your video
         </span>
         <ul role="list" className="mx-auto grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2 sm:gap-x-6 lg:grid-cols-4 xl:gap-x-8">
-          {files.map((file) => (
-            <li key={file.source} className="relative">
+          {videos.map((video) => (
+            <li key={video.youtubeUrl} className="relative">
               <div className="m-0 p-0 rounded-lg focus-within:ring-2 ring-offset-4 ring-orange-500">
                 <div className="relative aspect-video group block rounded-lg overflow-hidden">
-                  <img src={file.source} alt="" className="object-cover pointer-events-none group-hover:opacity-75" />
+                  <iframe width="296" height="168" src={`https://www.youtube.com/embed/${video.ID}`} title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen controls={0}></iframe>
                   <button type="button" className="absolute inset-0 focus:outline">
-                    <span className="sr-only">View details for {file.title}</span>
+                    <span className="sr-only">View details for {video.name}</span>
                   </button>
                 </div>
-                <p className="mt-2 block text-sm font-medium text-gray-900 truncate pointer-events-none">{file.title}</p>
-                <p className="block text-sm font-medium text-gray-500 pointer-events-none">{file.size}</p>
+                <p className="mt-2 block text-sm font-medium text-gray-900 truncate pointer-events-none">{video.name}</p>
+                <p className="block text-sm font-medium text-gray-500 pointer-events-none">{video.ID}</p>
               </div>
             </li>
           ))}
