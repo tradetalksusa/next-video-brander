@@ -1,0 +1,1 @@
+self.__BUILD_MANIFEST={__rewrites:{beforeFiles:[],afterFiles:[],fallback:[]},"/":["static/chunks/pages/index-dec185c089367600.js"],"/_error":["static/chunks/pages/_error-0a004b8b8498208d.js"],"/meaningoflife":["static/chunks/pages/meaningoflife-1bd0e344cc89d842.js"],sortedPages:["/","/_app","/_error","/meaningoflife"]},self.__BUILD_MANIFEST_CB&&self.__BUILD_MANIFEST_CB();
