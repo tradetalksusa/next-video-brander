@@ -1,7 +1,7 @@
 
 
 import { useState, useEffect, useRef } from 'react';
-import { FilmIcon as GenerateVideoIcon, EmojiHappyIcon as EditingVideoIcon, DownloadIcon as VideoDownloadIcon } from '@heroicons/react/solid'
+import { FilmIcon as GenerateVideoIcon, DownloadIcon as VideoDownloadIcon, PlayIcon as PlayVideoIcon } from '@heroicons/react/solid'
 import Video from '../data/video';
 import Image from '../data/image';
 import Slideshow from '../data/slideshow';
@@ -13,7 +13,7 @@ const ImageStatus = {
   ERROR: "error",
 }
 
-const VideoStatus = {
+const SlideshowStatus = {
   STANDBY: "standby",
   LOADING: "loading video",
   COMPLETE: "complete",
@@ -22,15 +22,16 @@ const VideoStatus = {
 
 export default function Example() {
 
-  const [isDragging, setIsDragging] = useState(false);
-  const [imageStatus, setImageStatus] = useState(ImageStatus.STANDBY)
-  const [selectedImage, setSelectedImage] = useState(null);
-  const [videoStatus, setVideoStatus] = useState(VideoStatus.STANDBY)
-  const [selectedVideo, setSelectedVideo] = useState(null);
   const [videos, setVideos] = useState([])
   const [isPlayButtonClicked, setIsPlayButtonClicked] = useState(false)
+  const [imageStatus, setImageStatus] = useState(ImageStatus.STANDBY)
+  const [selectedImage, setSelectedImage] = useState(null)
+  const [videoStatus, setVideoStatus] = useState(SlideshowStatus.STANDBY)
+  const [selectedVideo, setSelectedVideo] = useState(null)
+  const [slideshow, setSlideshow] = useState(null)
 
-  const videoRef = useRef();
+
+  const videoRef = useRef()
 
   const selectedVideoYouTubeUrl = selectedVideo && selectedVideo.youtubeUrl
 
@@ -54,6 +55,11 @@ export default function Example() {
     }
   }
 
+  const handleVideoSelect = (video={}) => {
+    console.log(`Selected video ${video.public_id}`)
+    setSelectedVideo(video)
+  }
+
   const handleImageUpload = async (file) => {
     console.log(`Uploading image: ${file.name}`)
     // set loading indicator
@@ -74,19 +80,32 @@ export default function Example() {
     }
   }
 
-  const handleGenerateVideo = async () => { 
-    setVideoStatus(VideoStatus.LOADING)
+  const handleSlideshowGenerate = async () => { 
+    setVideoStatus(SlideshowStatus.LOADING)
     
     let slideshow = new Slideshow(selectedImage, selectedVideo)
     console.log(`Uploading slideshow: ${slideshow}`)
 
     try {
       await slideshow.upload()
-      setVideoStatus(VideoStatus.COMPLETE)
+      setSlideshow(slideshow)
+      setVideoStatus(SlideshowStatus.COMPLETE)
     } catch (error) {
       console.error(error)
-      setVideoStatus(VideoStatus.ERROR)
+      setVideoStatus(SlideshowStatus.ERROR)
     }
+  }
+
+  const handleSlideshowDownload = () => {
+    let slideshowDownloadUrl = slideshow && slideshow.outputVideoUrlDownload
+    console.log(`Downloading slideshow ${slideshow.outputVideoUrlDownload}`)
+    window.open(slideshowDownloadUrl)
+  }
+
+  const handleSlideshowPreview = () => {
+    let slideshowPreviewUrl = slideshow && slideshow.outputVideoUrl
+    console.log(`Previewing slideshow ${slideshow.outputVideoUrlPreview}`)
+    window.open(slideshowPreviewUrl)
   }
 
   return (
@@ -187,7 +206,7 @@ export default function Example() {
                   ring-offset-4
                   ${ selectedVideoYouTubeUrl === video.youtubeUrl ? "ring-2 ring-orange-500 hover:ring-orange-500" : "hover:ring-2 ring-gray-300"}
                 `}
-                onClick={() => setSelectedVideo(video)}
+                onClick={() => handleVideoSelect(video)}
               >
                 <div className="relative pb-[56.25%] pt-px-30 h-0 group rounded-lg overflow-hidden">
                   <iframe className="absolute top-0 left-0 w-full h-full" src={`https://www.youtube.com/embed/${video.ID}`} title="YouTube video player" frameBorder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen controls={0}></iframe>
@@ -207,8 +226,7 @@ export default function Example() {
         </span>
         { imageStatus === ImageStatus.STANDBY && (
           <div
-            className={`mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-dashed rounded-md
-            border-${isDragging ? 'orange' : 'gray'}-300`}>
+            className={`mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-dashed rounded-md border-gray-300`}>
             <div className="space-y-1 text-center">
               <svg
                 className="mx-auto h-12 w-12 text-gray-400"
@@ -255,7 +273,10 @@ export default function Example() {
           </svg>
         )}
         {imageStatus === ImageStatus.COMPLETE && (
-          <img src={selectedImage.url} alt="Selected image" className="w-auto h-auto" />
+          <img 
+            src={selectedImage.url} 
+            alt="Selected image" 
+            className="w-auto h-auto max-w-full md:max-w-xl"/>
         )}
         {imageStatus === ImageStatus.ERROR && (
           "Error"
@@ -267,17 +288,17 @@ export default function Example() {
         <span className="block mb-8 text-2xl font-bold text-gray-700">
           Step 3: Create your video
         </span>
-        {videoStatus === VideoStatus.STANDBY && (
+        {videoStatus === SlideshowStatus.STANDBY && (
           <button
             type="button"
             className="inline-flex items-center px-6 py-3 border border-transparent shadow-sm text-base font-medium rounded-md text-white bg-orange-600 hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500"
-            onClick={() => { handleGenerateVideo() }}
+            onClick={() => { handleSlideshowGenerate() }}
           >
             <GenerateVideoIcon className="-ml-1 mr-3 h-5 w-5" aria-hidden="true" />
             Generate video
           </button>)
         }
-        {videoStatus === VideoStatus.LOADING &&
+        {videoStatus === SlideshowStatus.LOADING &&
           (<button
             type="button"
             className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-orange-700 bg-orange-100 hover:bg-orange-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500"
@@ -289,16 +310,28 @@ export default function Example() {
             Editing video...
           </button>)
         }
-        {videoStatus === VideoStatus.COMPLETE && (
-          <button
-            type="button"
-            className="inline-flex items-center px-6 py-3 border border-transparent shadow-sm text-base font-medium rounded-md text-white bg-orange-600 hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500"
-          >
-            <VideoDownloadIcon className="-ml-1 mr-3 h-5 w-5" aria-hidden="true" />
-            Download video
-          </button>)
-        }
-        {videoStatus === VideoStatus.ERROR && (
+        {videoStatus === SlideshowStatus.COMPLETE && (
+          <div className="inline-flex">
+            <button
+              type="button"
+              className="inline-flex items-center px-6 py-3 border border-transparent shadow-sm text-base font-medium rounded-md text-white bg-orange-600 hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500"
+              onClick={handleSlideshowDownload}
+            >
+              <VideoDownloadIcon className="-ml-1 mr-3 h-5 w-5" aria-hidden="true" />
+              Download video
+            </button>
+            <button
+              type="button"
+              className="ml-4 inline-flex items-center px-6 py-3 border border-transparent shadow-sm text-base font-medium rounded-md text-orange-700 bg-orange-100 hover:bg-orange-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500"
+              onClick={handleSlideshowPreview}
+            >
+              <PlayVideoIcon className="-ml-1 mr-3 h-5 w-5" aria-hidden="true" />
+              Preview video
+            </button>
+          </div>
+          
+        )}
+        {videoStatus === SlideshowStatus.ERROR && (
           "Error"
         )}
       </div>

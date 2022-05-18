@@ -8,9 +8,7 @@ export default class Image {
 
 
   constructor(file) {
-    console.log('constructing')
     this.file = file
-    console.log('file, ', file)
   }
 
   async upload() {
@@ -25,7 +23,7 @@ export default class Image {
     formData.append('upload_preset', 'video-branding');
     formData.append('cloud_name', 'tradetalksvideos');
 
-    console.log('Uploading image...')
+    console.log('Uploading image...', console.log(this.file))
 
     let response = await fetch('https://api.cloudinary.com/v1_1/tradetalksvideos/image/upload', {
       method: 'POST',
