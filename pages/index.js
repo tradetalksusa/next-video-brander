@@ -4,25 +4,7 @@ import { useState, useEffect } from 'react';
 import { FilmIcon as GenerateVideoIcon, EmojiHappyIcon as EditingVideoIcon, DownloadIcon as VideoDownloadIcon } from '@heroicons/react/solid'
 import Video from '../data/video';
 import Image from '../data/image';
-
-const videos = [
-  { "name": "Call of Duty: End of Service", "youtubeUrl": "https://www.youtube.com/watch?v=xLlc0QrLgJ4", "ID": "xLlc0QrLgJ4" }, 
-  { "name": "Transitioning out of the Military into the Skilled Trades", "youtubeUrl": "https://www.youtube.com/watch?v=_2MDazO7jt4", "ID": "_2MDazO7jt4" }, 
-  { "name": "Carpentry", "youtubeUrl": "https://www.youtube.com/watch?v=mvpHFSPCh7I", "ID": "mvpHFSPCh7I" }, 
-  { "name": "Welder - The 'Torch' bearer of the skilled trades", "youtubeUrl": "https://www.youtube.com/watch?v=evafrp_QEkY", "ID": "evafrp_QEkY" }, 
-  { "name": "Electricians and Project Managers (Veteran)", "youtubeUrl": "https://www.youtube.com/watch?v=iTrvRBmP1GY", "ID": "iTrvRBmP1GY" }, 
-  { "name": "Roofing Ninja - View from the top", "youtubeUrl": "https://www.youtube.com/watch?v=qszF7cYJbCA", "ID": "qszF7cYJbCA" }, 
-  { "name": "Construction Technologist", "youtubeUrl": "https://www.youtube.com/watch?v=xwuW0IB20JU", "ID": "xwuW0IB20JU" }, 
-  { "name": "Plumbing - Make money and have lots of job security", "youtubeUrl": "https://www.youtube.com/watch?v=zAeF2GNEpSI", "ID": "zAeF2GNEpSI" }, 
-  { "name": "Demolition (Tear things down to make them beautiful again)", "youtubeUrl": "https://www.youtube.com/watch?v=TsFu_FEGVi0", "ID": "TsFu_FEGVi0" }, 
-  { "name": "Carpentry (Veteran)", "youtubeUrl": "https://www.youtube.com/watch?v=pfGAOJdO3UA", "ID": "pfGAOJdO3UA" }, 
-  { "name": "HVAC and the Mechanical Trades", "youtubeUrl": "https://www.youtube.com/watch?v=78CtMRsFhQY", "ID": "78CtMRsFhQY" }, 
-  { "name": "The 'Real' Game of Life by TradeTalksUSA.org", "youtubeUrl": "https://www.youtube.com/watch?v=_sFi9xcyslA", "ID": "_sFi9xcyslA" }, 
-  { "name": "Jenn the Builder - Entrepreneur", "youtubeUrl": "https://www.youtube.com/watch?v=vxC2K2sTSLg", "ID": "vxC2K2sTSLg" }, 
-  { "name": "Existential Crisis - 4-Year & Technical College", "youtubeUrl": "https://www.youtube.com/watch?v=ojx0Ilr-5pY", "ID": "ojx0Ilr-5pY" }, 
-  { "name": "Electric Clyde (Being an Electrician is a power move)", "youtubeUrl": "https://www.youtube.com/watch?v=s9JKWnCuWv4", "ID": "s9JKWnCuWv4" }, 
-  { "name": "All We Do Is Build (P-Trap & Tech College feat. Lou da Plumber, General Contracta, & Drone Dougg)", "youtubeUrl": "https://www.youtube.com/watch?v=L_zEhqZJPwA", "ID": "L_zEhqZJPwA" },
-]
+import Slideshow from '../data/slideshow';
 
 const ImageStatus = {
   STANDBY: "standby",
@@ -38,22 +20,21 @@ const VideoStatus = {
   ERROR: "error",
 }
 
-function wait(milliseconds) {
-  return new Promise(resolve => setTimeout(resolve, milliseconds));
-}
-
 export default function Example() {
 
   const [isDragging, setIsDragging] = useState(false);
   const [imageStatus, setImageStatus] = useState(ImageStatus.STANDBY)
   const [selectedImage, setSelectedImage] = useState(null);
   const [videoStatus, setVideoStatus] = useState(VideoStatus.STANDBY)
+  const [selectedVideo, setSelectedVideo] = useState(null);
+  const [videos, setVideos] = useState([])
 
   const fetchVideos = async () => {
     console.log("Here")
     // get the videos from cloudinary
     let videos = await Video.fetchVideos()
     console.log(videos)
+    setVideos(videos)
   }
 
   // on load, get the videos
@@ -77,15 +58,23 @@ export default function Example() {
       setImageStatus(ImageStatus.COMPLETE)
     } catch (error) {
       console.error(error)
+      setImageStatus(ImageStatus.ERROR)
     }
-    
   }
 
-  const handleGenerateVideo = () => { 
+  const handleGenerateVideo = async () => { 
     setVideoStatus(VideoStatus.LOADING)
-    setTimeout(() => {
+    
+    let slideshow = new Slideshow(selectedImage, selectedVideo)
+    console.log(`Uploading slideshow: ${slideshow}`)
+
+    try {
+      await slideshow.upload()
       setVideoStatus(VideoStatus.COMPLETE)
-     }, 2000)
+    } catch (error) {
+      console.error(error)
+      setVideoStatus(VideoStatus.ERROR)
+    }
   }
 
   return (
@@ -134,7 +123,8 @@ export default function Example() {
                 </span>
               </h1>
               <p className="mt-3 text-base text-gray-500 sm:mt-5 sm:text-xl lg:text-lg xl:text-xl">
-                TradeTalks creates videos to spread awareness of skilled trades and training opportunities, and now you can combine your brand with our content to spread more awareness. 
+                TradeTalks creates videos to spread awareness of skilled trades and training opportunities, 
+                and now you can add your brand to our videos to help spread the word. 
               </p>
             </div>
             <div className="mt-12 relative sm:max-w-lg sm:mx-auto lg:mt-0 lg:max-w-none lg:mx-0 lg:col-span-6 lg:flex lg:items-center">
@@ -174,11 +164,11 @@ export default function Example() {
                 <div className="relative pb-[56.25%] pt-px-30 h-0  group rounded-lg overflow-hidden">
                   <iframe className="absolute top-0 left-0 w-full h-full" src={`https://www.youtube.com/embed/${video.ID}`} title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen controls={0}></iframe>
                   <button type="button" className="absolute inset-0 focus:outline">
-                    <span className="sr-only">View details for {video.name}</span>
+                    <span className="sr-only">View details for {video.title}</span>
                   </button>
                 </div>
                 <p className="mt-2 block max-w-full break-all text-sm font-medium text-gray-900 pointer-events-none">{video.name}</p>
-                <p className="block text-sm font-medium text-gray-500 pointer-events-none">{video.ID}</p>
+                <p className="block text-sm font-medium text-gray-500 pointer-events-none">{video.title}</p>
               </div>
             </li>
           ))}
@@ -242,6 +232,9 @@ export default function Example() {
         {imageStatus === ImageStatus.COMPLETE && (
           <img src={selectedImage.url} alt="Selected image" className="w-auto h-auto" />
         )}
+        {imageStatus === ImageStatus.ERROR && (
+          "Error"
+        )}
       </div>
 
       {/* Step 3: Generate your video */}
@@ -280,6 +273,9 @@ export default function Example() {
             Download video
           </button>)
         }
+        {videoStatus === VideoStatus.ERROR && (
+          "Error"
+        )}
       </div>
 
     </div>

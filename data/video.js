@@ -1,7 +1,9 @@
 
 export default class Video {
 
+  ID
   public_id
+  title
   version
   format
   width
@@ -159,7 +161,23 @@ export default class Video {
     "updated_at": "2022-05-17T00:17:22Z"
   }
 
-  static async fetchVideos(options={ static: true }) {
+  constructor(videoData = {}) {
+    Object.assign(this, videoData)
+    let videoID = videoData.public_id || ""
+    // grab the last part of the url for the ID
+    this.ID = videoID.split('/').filter(e => e).pop()
+    // create a youtube url
+    this.youtubeUrl = `https://www.youtube.com/watch?v=${this.ID}`
+    // try to grab the title
+    try {
+      this.title = videoData.context.custom.caption
+    } catch (error) {
+      console.error("Couldn't parse video title")
+      console.log(videoData)
+    }
+  }
+
+  static async fetchVideos(options={ static: false }) {
 
     let videoList = this.staticVideoList.resources
 
@@ -167,7 +185,7 @@ export default class Video {
     if (!options.static) {
       try {
         // grab the videos by the 'brandable' tag on Cloudinary
-        let videoListResponse = await fetch(`https://res.cloudinary.com/tradetalksvideos/video/list/brandable.json`)
+        let videoListResponse = await fetch(`https://res.cloudinary.com/tradetalksvideos/video/list/brandable.json`, { cache: "no-cache" })
         let videoListResult = await videoListResponse.json()
         videoList = videoListResult.resources
       } catch (error) {
@@ -178,15 +196,6 @@ export default class Video {
 
     let videos = videoList.map(videoData => new Video(videoData) )
     return videos
-  }
-
-  constructor(videoData={}) { 
-    Object.assign(this, videoData)
-    let videoID = videoData.public_id || ""
-    // grab the last part of the url for the ID
-    this.ID = videoID.split('/').filter(e => e).pop() 
-    // create a youtube url
-    this.youtubeURL = `https://www.youtube.com/watch?v=${this.ID}`
   }
 }
 

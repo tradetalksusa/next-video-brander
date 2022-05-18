@@ -1,8 +1,11 @@
 
 export default class Image {
 
+  ID
+  public_id
   file
   url
+
 
   constructor(file) {
     console.log('constructing')
@@ -35,6 +38,8 @@ export default class Image {
 
     let result = await response.json()
     this.url = result.secure_url || result.url
+    this.public_id = result.public_id
+    this.ID = result.public_id.split('/').filter(e => e).pop()
 
     console.log('Image uploaded.', result)
 
