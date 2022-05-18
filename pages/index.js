@@ -1,6 +1,6 @@
 
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { FilmIcon as GenerateVideoIcon, EmojiHappyIcon as EditingVideoIcon, DownloadIcon as VideoDownloadIcon } from '@heroicons/react/solid'
 import Video from '../data/video';
 import Image from '../data/image';
@@ -28,6 +28,9 @@ export default function Example() {
   const [videoStatus, setVideoStatus] = useState(VideoStatus.STANDBY)
   const [selectedVideo, setSelectedVideo] = useState(null);
   const [videos, setVideos] = useState([])
+  const [isPlayButtonClicked, setIsPlayButtonClicked] = useState(false)
+
+  const videoRef = useRef();
 
   const selectedVideoYouTubeUrl = selectedVideo && selectedVideo.youtubeUrl
 
@@ -43,6 +46,13 @@ export default function Example() {
     console.log("Page load")
     fetchVideos()
   }, [])
+
+  const handlePlayButtonClick = () => { 
+    setIsPlayButtonClicked(true)
+    if (videoRef.current) {
+      videoRef.current.play()
+    }
+  }
 
   const handleImageUpload = async (file) => {
     console.log(`Uploading image: ${file.name}`)
@@ -134,14 +144,23 @@ export default function Example() {
                 <button
                   type="button"
                   className="relative block w-full bg-white rounded-lg overflow-hidden focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500"
+                  onClick={handlePlayButtonClick}
                 >
                   <span className="sr-only">Watch our video to learn more</span>
-                  <img
+                  <video
                     className="w-full"
-                    src="https://images.unsplash.com/photo-1556740758-90de374c12ad?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80"
+                    src="https://res.cloudinary.com/tradetalksvideos/video/upload/w_1280,h_720/w_1280,h_720,l_v1652785301:video-branding:user-images:maxresdefault_gnc1yq.jpg,fl_splice,du_5/so_0,fl_layer_apply/w_1280,h_720,l_v1652785301:video-branding:user-images:maxresdefault_gnc1yq.jpg,fl_splice,du_5/fl_layer_apply/v1652525448/video-branding/videos/xwuW0IB20JU.mp4"
                     alt=""
+                    ref={videoRef}
+                    controls={ isPlayButtonClicked }
                   />
-                  <div className="absolute inset-0 w-full h-full flex items-center justify-center" aria-hidden="true">
+                  <div 
+                    className={`
+                      absolute inset-0 w-full h-full flex items-center justify-center
+                      ${isPlayButtonClicked && "invisible"}
+                    `} 
+                    aria-hidden="true"
+                  >
                     <svg className="h-20 w-20 text-orange-500" fill="currentColor" viewBox="0 0 84 84">
                       <circle opacity="0.9" cx={42} cy={42} r={42} fill="white" />
                       <path d="M55.5039 40.3359L37.1094 28.0729C35.7803 27.1869 34 28.1396 34 29.737V54.263C34 55.8604 35.7803 56.8131 37.1094 55.9271L55.5038 43.6641C56.6913 42.8725 56.6913 41.1275 55.5039 40.3359Z" />
