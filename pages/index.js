@@ -24,14 +24,18 @@ export default function Example() {
 
   const [videos, setVideos] = useState([])
   const [isPlayButtonClicked, setIsPlayButtonClicked] = useState(false)
+  const [isFormStarted, setIsFormStarted] = useState(false)
+  const [currentStep, setCurrentStep] = useState(1)
   const [imageStatus, setImageStatus] = useState(ImageStatus.STANDBY)
   const [selectedImage, setSelectedImage] = useState(null)
-  const [videoStatus, setVideoStatus] = useState(SlideshowStatus.STANDBY)
+  const [slideshowStatus, setSlideshowStatus] = useState(SlideshowStatus.STANDBY)
   const [selectedVideo, setSelectedVideo] = useState(null)
   const [slideshow, setSlideshow] = useState(null)
 
 
   const videoRef = useRef()
+  const step2Ref = useRef()
+  const step3Ref = useRef()
 
   const selectedVideoYouTubeUrl = selectedVideo && selectedVideo.youtubeUrl
 
@@ -45,6 +49,7 @@ export default function Example() {
   // on load, get the videos
   useEffect(() => { 
     console.log("Page load")
+    // fetch the video list
     fetchVideos()
   }, [])
 
@@ -58,6 +63,21 @@ export default function Example() {
   const handleVideoSelect = (video={}) => {
     console.log(`Selected video ${video.public_id}`)
     setSelectedVideo(video)
+
+    if (currentStep < 2) {
+      setCurrentStep(2)
+
+      // the first time we go to step 2, animate it
+      let step2 = step2Ref.current
+      if (step2) {
+        setTimeout(() => {
+          step2.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start',
+          })
+        }, 300)
+      }
+    }
   }
 
   const handleImageUpload = async (file) => {
@@ -74,6 +94,21 @@ export default function Example() {
       await image.upload()
       // mark the image as uploaded
       setImageStatus(ImageStatus.COMPLETE)
+      // highlight the next step
+      if (currentStep < 3) {
+        setCurrentStep(3)
+        // the first time we go to step 3, animate it
+        let step3 = step3Ref.current
+        setTimeout(() => {
+          if (step3) {
+            step3.scrollIntoView({
+              behavior: 'smooth',
+              block: 'start',
+            })
+          }
+        } ,500)
+        
+      }
     } catch (error) {
       console.error(error)
       setImageStatus(ImageStatus.ERROR)
@@ -81,7 +116,7 @@ export default function Example() {
   }
 
   const handleSlideshowGenerate = async () => { 
-    setVideoStatus(SlideshowStatus.LOADING)
+    setSlideshowStatus(SlideshowStatus.LOADING)
     
     let slideshow = new Slideshow(selectedImage, selectedVideo)
     console.log(`Uploading slideshow: ${slideshow}`)
@@ -89,10 +124,10 @@ export default function Example() {
     try {
       await slideshow.upload()
       setSlideshow(slideshow)
-      setVideoStatus(SlideshowStatus.COMPLETE)
+      setSlideshowStatus(SlideshowStatus.COMPLETE)
     } catch (error) {
       console.error(error)
-      setVideoStatus(SlideshowStatus.ERROR)
+      setSlideshowStatus(SlideshowStatus.ERROR)
     }
   }
 
@@ -139,7 +174,7 @@ export default function Example() {
       </div>
 
       {/* Hero */}
-      <div className="relative pt-6 pb-16 sm:pb-24 lg:pb-32">
+      <div className="relative pt-6 pb-16 sm:pb-40">
         <main className="mt-16 mx-auto max-w-7xl px-4 sm:mt-24 sm:px-6 lg:mt-32">
           <div className="lg:grid lg:grid-cols-12 lg:gap-8">
             <div className="sm:text-center md:max-w-2xl md:mx-auto lg:col-span-6 lg:text-left">
@@ -191,11 +226,20 @@ export default function Example() {
           </div>
         </main>
       </div>
-
+  
       {/* Step 1: Choose your video */}
-      <div className="mx-auto max-w-7xl pt-6 pb-16 sm:pb-24 lg:pb-32">
-        <span className="block  mb-8 text-2xl font-bold text-gray-700">
-          Step 1: Choose your video
+      <div 
+        className="mx-auto max-w-7xl pt-6 pb-24"
+      >
+        <span 
+          className={`block mb-4 text-2xl font-bold text-gray-800
+            ${ currentStep === 1 && "underline decoration-orange-500 underline-offset-4 decoration-4" }
+          `}
+        >
+          Step 1: Choose a video
+        </span>
+        <span className="block mb-8 text-lg text-gray-700">
+          Click the title below a video to select it. This is the template video that your brand image will be added to. 
         </span>
         <ul role="list" className="mx-auto grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2 sm:gap-x-6 lg:grid-cols-4 xl:gap-x-8">
           {videos.map((video) => (
@@ -220,9 +264,18 @@ export default function Example() {
       </div>
 
       {/* Step 2: Upload your brand image */}
-      <div className="mx-auto max-w-7xl pt-6 pb-16 sm:pb-24 lg:pb-32">
-        <span className="block mb-8 text-2xl font-bold text-gray-700">
+      <div className="mx-auto max-w-7xl pt-6 pb-24 lg:pb-24" ref={step2Ref}>
+        <span
+          className={`block mb-4 text-2xl font-bold text-gray-800
+            ${currentStep === 2 && "underline decoration-orange-500 underline-offset-4 decoration-4"}
+          `}
+        >
           Step 2: Upload your brand image
+        </span>
+        <span className="block mb-8 text-lg text-gray-700">
+          A 1920x1080 image (the default size of a Powerpoint slide or widescreen video) is recommended. 
+          This is the image that will be added to the video beginning and end. The image will show for 5 seconds before the TradeTalks video begins, 
+          and again for 5 seconds after the end of the video. Here is a quick explanation of <a href="https://www.youtube.com/watch?v=e5wkgvn7IWg" target="_blank" className="text-blue-500 underline" rel="noreferrer">how to export a Powerpoint slide to image format</a>.
         </span>
         { imageStatus === ImageStatus.STANDBY && (
           <div
@@ -284,21 +337,37 @@ export default function Example() {
       </div>
 
       {/* Step 3: Generate your video */}
-      <div className="mx-auto max-w-7xl pt-6 pb-16 sm:pb-24 lg:pb-32">
-        <span className="block mb-8 text-2xl font-bold text-gray-700">
-          Step 3: Create your video
+      <div className="mx-auto max-w-7xl pt-6 pb-32" ref={step3Ref}>
+        <span
+          className={`block mb-4 text-2xl font-bold text-gray-800
+            ${currentStep === 3 && "underline decoration-orange-500 underline-offset-4 decoration-4"}
+          `}
+        >
+          {slideshowStatus === SlideshowStatus.COMPLETE ? "Step 3: Download your video" : "Step 3: Create your video"}
         </span>
-        {videoStatus === SlideshowStatus.STANDBY && (
+        <span className="block mb-8 text-lg text-gray-700 max-w-5xl">
+          {currentStep < 3 && "To generate a new video, first select a template video and upload your brand image."}
+          {currentStep === 3 &&
+            slideshowStatus === SlideshowStatus.STANDBY ? "Click the button below to combine your selected video and uploaded image into a new branded video."
+            : slideshowStatus === SlideshowStatus.LOADING ? "Hang tight."
+            : slideshowStatus === SlideshowStatus.COMPLETE ? "Download or preview your branded video. Note that the download will open in a new window,\
+            and might take up to a minute to process before the download begins. The preview will also open in a new window." : ""
+          }
+        </span>
+        {slideshowStatus === SlideshowStatus.STANDBY && (
           <button
             type="button"
-            className="inline-flex items-center px-6 py-3 border border-transparent shadow-sm text-base font-medium rounded-md text-white bg-orange-600 hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500"
+            className="inline-flex items-center px-6 py-3 border border-transparent shadow-sm text-base font-medium rounded-md text-white 
+            bg-orange-600 hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500
+            disabled:bg-orange-200"
+            disabled={ !selectedImage || !selectedVideo}
             onClick={() => { handleSlideshowGenerate() }}
           >
             <GenerateVideoIcon className="-ml-1 mr-3 h-5 w-5" aria-hidden="true" />
             Generate video
           </button>)
         }
-        {videoStatus === SlideshowStatus.LOADING &&
+        {slideshowStatus === SlideshowStatus.LOADING &&
           (<button
             type="button"
             className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-orange-700 bg-orange-100 hover:bg-orange-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500"
@@ -307,10 +376,10 @@ export default function Example() {
               <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
               <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
             </svg>
-            Editing video...
+            Generating video...
           </button>)
         }
-        {videoStatus === SlideshowStatus.COMPLETE && (
+        {slideshowStatus === SlideshowStatus.COMPLETE && (
           <div className="inline-flex">
             <button
               type="button"
@@ -331,7 +400,7 @@ export default function Example() {
           </div>
           
         )}
-        {videoStatus === SlideshowStatus.ERROR && (
+        {slideshowStatus === SlideshowStatus.ERROR && (
           "Error"
         )}
       </div>
