@@ -29,8 +29,9 @@ export default function Example() {
   const [selectedVideo, setSelectedVideo] = useState(null);
   const [videos, setVideos] = useState([])
 
+  const selectedVideoYouTubeUrl = selectedVideo && selectedVideo.youtubeUrl
+
   const fetchVideos = async () => {
-    console.log("Here")
     // get the videos from cloudinary
     let videos = await Video.fetchVideos()
     console.log(videos)
@@ -39,6 +40,7 @@ export default function Example() {
 
   // on load, get the videos
   useEffect(() => { 
+    console.log("Page load")
     fetchVideos()
   }, [])
 
@@ -160,15 +162,19 @@ export default function Example() {
         <ul role="list" className="mx-auto grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2 sm:gap-x-6 lg:grid-cols-4 xl:gap-x-8">
           {videos.map((video) => (
             <li key={video.youtubeUrl} className="relative">
-              <div className="m-2 p-2 rounded-lg focus-within:ring-2 ring-offset-4 ring-orange-500">
-                <div className="relative pb-[56.25%] pt-px-30 h-0  group rounded-lg overflow-hidden">
-                  <iframe className="absolute top-0 left-0 w-full h-full" src={`https://www.youtube.com/embed/${video.ID}`} title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen controls={0}></iframe>
-                  <button type="button" className="absolute inset-0 focus:outline">
-                    <span className="sr-only">View details for {video.title}</span>
-                  </button>
+              <div 
+                tabIndex={0} 
+                className={`m-2 p-2 rounded-lg cursor-pointer
+                  ring-offset-4
+                  ${ selectedVideoYouTubeUrl === video.youtubeUrl ? "ring-2 ring-orange-500 hover:ring-orange-500" : "hover:ring-2 ring-gray-300"}
+                `}
+                onClick={() => setSelectedVideo(video)}
+              >
+                <div className="relative pb-[56.25%] pt-px-30 h-0 group rounded-lg overflow-hidden">
+                  <iframe className="absolute top-0 left-0 w-full h-full" src={`https://www.youtube.com/embed/${video.ID}`} title="YouTube video player" frameBorder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen controls={0}></iframe>
                 </div>
-                <p className="mt-2 block max-w-full break-all text-sm font-medium text-gray-900 pointer-events-none">{video.name}</p>
-                <p className="block text-sm font-medium text-gray-500 pointer-events-none">{video.title}</p>
+                <p className="mt-2 block max-w-full break-all text-sm font-medium text-darkgray-900">{video.title}</p>
+                <p className="block text-sm font-medium text-darkgray-500">{video.description}</p>
               </div>
             </li>
           ))}
