@@ -1,7 +1,12 @@
 
 
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { FilmIcon as GenerateVideoIcon, DownloadIcon as VideoDownloadIcon, PlayIcon as PlayVideoIcon } from '@heroicons/react/solid'
+import { 
+  FilmIcon as GenerateVideoIcon, 
+  DownloadIcon as VideoDownloadIcon, 
+  PlayIcon as PlayVideoIcon,
+  CloudUploadIcon as VideoUploadIcon,
+} from '@heroicons/react/solid'
 import Video from '../data/video';
 import Image from '../data/image';
 import Slideshow from '../data/slideshow';
@@ -25,6 +30,7 @@ const SlideshowStatus = {
 const OPTIONS = {
   animateScrollToStep2: false,
   animateScrollToStep3: true,
+  animateScrollToStep4: true,
 }
 
 export default function Example() {
@@ -40,7 +46,9 @@ export default function Example() {
 
   const videoRef = useRef()
   const step2Ref = useRef()
-  const step3Ref = useRef()
+  const step3Ref = useRef()  
+  const step4Ref = useRef()
+
 
   // File dropzone stuff
   const onDrop = useCallback(acceptedFiles => {
@@ -152,6 +160,22 @@ export default function Example() {
     let slideshowDownloadUrl = slideshow && slideshow.outputVideoUrlDownload
     console.log(`Downloading slideshow ${slideshow.outputVideoUrlDownload}`)
     window.open(slideshowDownloadUrl)
+
+    // highlight step 4
+    setCurrentStep(4)
+
+    // scroll to next step
+    if (OPTIONS.animateScrollToStep4) {
+      let step4 = step4Ref.current
+      setTimeout(() => {
+        if (step4) {
+          step4.scrollIntoView({
+            behavior: 'smooth',
+            block: 'end',
+          })
+        }
+      }, 10)
+    }
   }
 
   const handleSlideshowPreview = () => {
@@ -247,9 +271,9 @@ export default function Example() {
         </main>
       </div>
   
-      {/* Step 1: Choose your video */}
+      {/* Step 1: Choose your video template */}
       <div 
-        className="mx-auto max-w-7xl pt-6 pb-24"
+        className="mx-auto max-w-7xl pt-6 pb-16"
       >
         <span 
           className={`block mb-4 text-2xl font-bold text-gray-800
@@ -284,7 +308,7 @@ export default function Example() {
       </div>
 
       {/* Step 2: Upload your brand image */}
-      <div className="mx-auto max-w-7xl pt-6 pb-24 lg:pb-24" ref={step2Ref}>
+      <div className="mx-auto max-w-7xl pt-6 pb-24 lg:pb-16" ref={step2Ref}>
         <span className={`block mb-4 text-2xl font-bold text-gray-800
             ${currentStep === 2 && "underline decoration-orange-500 underline-offset-4 decoration-4"}
         `}>
@@ -361,7 +385,7 @@ export default function Example() {
       </div>
 
       {/* Step 3: Generate your video */}
-      <div className="mx-auto max-w-7xl pt-6 pb-32" ref={step3Ref}>
+      <div className="mx-auto max-w-7xl pt-6 pb-24" ref={step3Ref}>
         <span
           className={`block mb-4 text-2xl font-bold text-gray-800
             ${currentStep === 3 && "underline decoration-orange-500 underline-offset-4 decoration-4"}
@@ -429,6 +453,51 @@ export default function Example() {
         )}
       </div>
 
+      {/* Step 4: Share your video */}
+      {currentStep === 4 && (
+        <div className="mx-auto max-w-7xl pt-2 pb-48" ref={step4Ref}>
+          <span
+            className={`block mb-4 text-2xl font-bold text-gray-800
+            ${currentStep === 4 && "underline decoration-orange-500 underline-offset-4 decoration-4"}
+          `}
+          >
+            Step 4: Share your video
+          </span>
+          <span className="block mb-8 text-md text-gray-700 max-w-5xl">
+            Your video is in mp4 format, and can easily be uploaded to YouTube, Instagram, or any other video sharing service.
+          </span>
+          <div className="flex flex-col items-start">
+            <a 
+              href="https://youtube.com/upload"
+              target="_blank"
+              type="button"
+              className="inline-flex items-center px-6 py-3 border border-transparent shadow-sm text-base font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+            >
+              <VideoUploadIcon className="-ml-1 mr-3 h-5 w-5" aria-hidden="true" />
+              Upload to YouTube
+            </a>
+            <a 
+              href="https://instagram.com/accounts/login/"
+              target="_blank"
+              type="button"
+              className="mt-4 inline-flex items-center px-6 py-3 border border-transparent shadow-sm text-base font-medium rounded-md text-white bg-gray-700 hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+            >
+              <VideoUploadIcon className="-ml-1 mr-3 h-5 w-5" aria-hidden="true" />
+              Upload to Instagram
+            </a>
+            <a
+              href="https://twitter.com/compose/tweet"
+              target="_blank"
+              type="button"
+              className="mt-4 inline-flex items-center px-6 py-3 border border-transparent shadow-sm text-base font-medium rounded-md text-white bg-blue-400 hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+            >
+              <VideoUploadIcon className="-ml-1 mr-3 h-5 w-5" aria-hidden="true" />
+              Upload to Twitter
+            </a>
+          </div>
+          
+        </div>
+      )}
     </div>
   )
 }
