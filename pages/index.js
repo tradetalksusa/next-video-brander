@@ -470,6 +470,7 @@ export default function Example() {
             <a 
               href="https://youtube.com/upload"
               target="_blank"
+              rel="noreferrer"
               type="button"
               className="inline-flex items-center px-6 py-3 border border-transparent shadow-sm text-base font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
             >
@@ -479,6 +480,7 @@ export default function Example() {
             <a 
               href="https://instagram.com/accounts/login/"
               target="_blank"
+              rel="noreferrer"
               type="button"
               className="mt-4 inline-flex items-center px-6 py-3 border border-transparent shadow-sm text-base font-medium rounded-md text-white bg-gray-700 hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
             >
@@ -488,6 +490,7 @@ export default function Example() {
             <a
               href="https://twitter.com/compose/tweet"
               target="_blank"
+              rel="noreferrer"
               type="button"
               className="mt-4 inline-flex items-center px-6 py-3 border border-transparent shadow-sm text-base font-medium rounded-md text-white bg-blue-400 hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
             >
