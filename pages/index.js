@@ -247,7 +247,7 @@ export default function Example() {
                   <span className="sr-only">Watch our video to learn more</span>
                   <video
                     className="w-full"
-                    src="https://res.cloudinary.com/tradetalksvideos/video/upload/w_1280,h_720/w_1280,h_720,l_v1652785301:video-branding:user-images:maxresdefault_gnc1yq.jpg,fl_splice,du_5/so_0,fl_layer_apply/w_1280,h_720,l_v1652785301:video-branding:user-images:maxresdefault_gnc1yq.jpg,fl_splice,du_5/fl_layer_apply/v1652525448/video-branding/videos/xwuW0IB20JU.mp4"
+                    src="https://res.cloudinary.com/tradetalksvideos/video/upload/w_1280,h_720/w_1280,h_720,l_video-branding:user-images:zcads46msezfwcqqu5kv,fl_splice,du_5/so_0,fl_layer_apply/w_1280,h_720,l_video-branding:user-images:zcads46msezfwcqqu5kv,fl_splice,du_5/fl_layer_apply/video-branding/videos/xwuW0IB20JU"
                     alt=""
                     ref={videoRef}
                     controls={ isPlayButtonClicked }
