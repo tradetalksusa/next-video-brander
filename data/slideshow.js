@@ -2,18 +2,20 @@
 const transformUrl = 
 `https://res.cloudinary.com/tradetalksvideos/video/upload/w_1280,h_720/w_1280,h_720,
 l_{IMAGE_ID},fl_splice,du_5/so_0,fl_layer_apply/w_1280,h_720,
-l_{IMAGE_ID},fl_splice,du_5/fl_layer_apply/{VIDEO_ID}`
+l_{IMAGE_ID_SECOND},fl_splice,du_5/fl_layer_apply/{VIDEO_ID}`
 
 export default class Slideshow {
 
   image
+  secondImage
   video
   outputVideoUrl
   outputVideoUrlDownload
 
-  constructor(image, video) {
+  constructor(image, video, secondImage) {
     this.image = image
     this.video = video
+    this.secondImage = secondImage
   }
 
   async upload() {
@@ -32,9 +34,15 @@ export default class Slideshow {
 
     // cloudinary requires the transform elements' url / character to be escaped
     let imagePublicIDEscaped = this.image.public_id.replaceAll("/", ':')
+    let secondImagePublicIDEscaped = imagePublicIDEscaped
+    // add in the separate outtro image if it exists
+    if (this.secondImage) {
+      secondImagePublicIDEscaped = this.secondImage.public_id.replaceAll("/", ':')
+    } 
     // make a cloudinary lazy GET video transform URL
     let videoTransformUrl = 
       transformUrl.replaceAll('{IMAGE_ID}', imagePublicIDEscaped)
+                  .replaceAll('{IMAGE_ID_SECOND}', secondImagePublicIDEscaped)  
                   .replace('{VIDEO_ID}', this.video.public_id)
 
     console.log(videoTransformUrl)

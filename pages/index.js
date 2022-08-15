@@ -210,8 +210,9 @@ export default function Example() {
   const handleSlideshowGenerate = async () => { 
     setSlideshowStatus(SlideshowStatus.LOADING)
     
-    let slideshow = new Slideshow(selectedImage, selectedVideo)
+    let slideshow = new Slideshow(selectedImage, selectedVideo, secondSelectedImage)
     console.log(`Uploading slideshow: ${slideshow}`)
+    console.log('second image', secondSelectedImage)
 
     try {
       await slideshow.upload()
