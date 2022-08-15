@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { 
+  DocumentAddIcon as AddIcon,
   FilmIcon as GenerateVideoIcon, 
   DownloadIcon as VideoDownloadIcon, 
   PlayIcon as PlayVideoIcon,
@@ -382,6 +383,20 @@ export default function Example() {
         {imageStatus === ImageStatus.ERROR && (
           "Error"
         )}
+
+        <span className="block mt-8 mb-4 text-md text-gray-700">
+          Want to use a different image for the end of the video?
+        </span>
+        <button
+          type="button"
+          className="inline-flex items-center px-2 py-2 border border-orange-600 shadow-sm text-base font-medium rounded-md text-orange-600 bg-white-600 hover:text-orange-700 hover:border-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500"
+          onClick={handleSlideshowDownload}
+        >
+          <AddIcon className="-ml-1 mr-3 h-5 w-5" aria-hidden="true" />
+          Add ending slide
+        </button>
+        
+        
       </div>
 
       {/* Step 3: Generate your video */}
