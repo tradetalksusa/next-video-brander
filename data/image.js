@@ -23,7 +23,7 @@ export default class Image {
     formData.append('upload_preset', 'video-branding');
     formData.append('cloud_name', 'tradetalksvideos');
 
-    console.log('Uploading image...', console.log(this.file))
+    console.log('Uploading image...')
 
     let response = await fetch('https://api.cloudinary.com/v1_1/tradetalksvideos/image/upload', {
       method: 'POST',
