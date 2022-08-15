@@ -380,11 +380,11 @@ export default function Example() {
         <span className={`block mb-4 text-2xl font-bold text-gray-800
             ${currentStep === 2 && "underline decoration-orange-500 underline-offset-4 decoration-4"}
         `}>
-          Step 2: Upload your brand image
+          Step 2: Upload your branded slide or image
         </span>
         <span className="block mb-8 text-md text-gray-700">
           A 1920x1080 image (the default size of a Powerpoint slide or widescreen video) is recommended. 
-          This is the image that will be added to the video beginning and end. The image will show for 5 seconds before the TradeTalks video begins, 
+          This is the slide that will be added to the video beginning and end. The slide will show for 5 seconds before the TradeTalks video begins, 
           and again for 5 seconds after the end of the video. Here is a quick explanation of <a href="https://www.youtube.com/watch?v=e5wkgvn7IWg" target="_blank" className="text-blue-500 underline" rel="noreferrer">how to export a Powerpoint slide to image format</a>.
         </span>
         { imageStatus === ImageStatus.STANDBY && (
@@ -453,8 +453,8 @@ export default function Example() {
 
         
         <span className="block mt-8 mb-4 text-md text-gray-700">
-          {!isSecondImageSelected ? "Want to use a different image for the end of the video?"
-          : "You can optionally upload a second image to be shown at the end of the video."}
+          {!isSecondImageSelected ? "Want to use a different slide for the end of the video?"
+          : "You can optionally upload a second slide to be shown at the end of the video."}
         </span>
         {!isSecondImageSelected && (
           <button
