@@ -53,39 +53,6 @@ export default function Example() {
   const step3Ref = useRef()  
   const step4Ref = useRef()
 
-
-  // File dropzone stuff
-  const onDrop = useCallback(acceptedFiles => {
-     console.log('First image dropped')
-    // Do something with the files
-    let file = acceptedFiles[0]
-    if (file) {
-      handleImageUpload(acceptedFiles[0])
-    }
-  }, [])
-
-  const { 
-    getRootProps,
-    getInputProps, 
-    isDragActive
-  } = useDropzone({ onDrop })
-
-  // Second dropzone
-  const onSecondDrop = useCallback(acceptedFiles => {
-    console.log('Second image dropped', acceptedFiles)
-    // Do something with the files
-    let file = acceptedFiles[0]
-    if (file) {
-      handleSecondImageUpload(acceptedFiles[0])
-    }
-  }, [])
-
-  const { 
-    getRootProps: getSecondRootProps, 
-    getInputProps: getSecondInputProps, 
-    isDragActive: isSecondDragActive 
-  } = useDropzone({ onDrop: onSecondDrop })
-
   const fetchVideos = async () => {
     // get the videos from cloudinary
     let videos = await Video.fetchVideos()
@@ -129,7 +96,7 @@ export default function Example() {
     }
   }
 
-  const handleImageUpload = async (file) => {
+  const handleImageUpload = useCallback(async (file) => {
     console.log(`Uploading image: ${file.name}`)
     // set loading indicator
     setImageStatus(ImageStatus.LOADING)
@@ -164,9 +131,9 @@ export default function Example() {
       console.error(error)
       setImageStatus(ImageStatus.ERROR)
     }
-  }
+  }, [currentStep])
 
-  const handleSecondImageUpload = async (file) => {
+  const handleSecondImageUpload = useCallback(async (file) => {
     console.log(`Uploading second image: ${file.name}`)
     // set loading indicator
     setSecondImageStatus(ImageStatus.LOADING)
@@ -201,11 +168,43 @@ export default function Example() {
       console.error(error)
       setSecondImageStatus(ImageStatus.ERROR)
     }
-  }
+  }, [currentStep])
 
   const handleSecondImageUploadSelected = async () => {
     setIsSecondImageSelected(true)
   }
+
+  // File dropzone stuff
+  const onDrop = useCallback(acceptedFiles => {
+     console.log('First image dropped')
+    // Do something with the files
+    let file = acceptedFiles[0]
+    if (file) {
+      handleImageUpload(acceptedFiles[0])
+    }
+  }, [handleImageUpload])
+
+  const { 
+    getRootProps,
+    getInputProps, 
+    isDragActive
+  } = useDropzone({ onDrop })
+
+  // Second dropzone
+  const onSecondDrop = useCallback(acceptedFiles => {
+    console.log('Second image dropped', acceptedFiles)
+    // Do something with the files
+    let file = acceptedFiles[0]
+    if (file) {
+      handleSecondImageUpload(acceptedFiles[0])
+    }
+  }, [handleSecondImageUpload])
+
+    const { 
+    getRootProps: getSecondRootProps, 
+    getInputProps: getSecondInputProps, 
+    isDragActive: isSecondDragActive 
+  } = useDropzone({ onDrop: onSecondDrop })
 
   const handleSlideshowGenerate = async () => { 
     setSlideshowStatus(SlideshowStatus.LOADING)
@@ -257,7 +256,7 @@ export default function Example() {
 
   return (
     // Container
-    <div className="bg-white overflow-hidden">
+    <div className="bg-white overflow-hidden p-8">
 
       {/* Fancy dots */}
       <div className="hidden lg:block lg:absolute lg:inset-0 overflow-hidden" aria-hidden="true" >
@@ -286,8 +285,8 @@ export default function Example() {
       </div>
 
       {/* Hero */}
-      <div className="relative pt-6 pb-16 sm:pb-40">
-        <main className="mt-16 mx-auto max-w-7xl px-4 sm:mt-24 sm:px-6 lg:mt-32">
+      <div className="relative pb-16 sm:pb-40">
+        <main className="mt-8 mx-auto max-w-7xl px-4 sm:mt-24 sm:px-6 lg:mt-32">
           <div className="lg:grid lg:grid-cols-12 lg:gap-8">
             <div className="sm:text-center md:max-w-2xl md:mx-auto lg:col-span-6 lg:text-left">
               <h1>
@@ -502,7 +501,7 @@ export default function Example() {
                       handleSecondImageUpload(event.target.files[0]);
                     }}
                     className="sr-only"
-                    {...getInputProps()}
+                    {...getSecondInputProps()}
                   />
                 </label>
                 <p className="pl-1">or drag and drop</p>

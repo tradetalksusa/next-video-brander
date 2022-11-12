@@ -32,4 +32,4 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 ```
 npm run deploy
 ```
-
+Note: something changed with github pages, you might have to quickly kill the gh-pages branch on GitHub before deploying to avoid conflicts stopping the merge. 
